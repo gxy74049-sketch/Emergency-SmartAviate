@@ -1,0 +1,810 @@
+{
+  "schema_version": 1,
+  "seed": 42,
+  "end_s": 1800,
+  "parameters": {
+    "step_s": 1,
+    "score_period_s": 5,
+    "levels_m": {
+      "G": 0,
+      "L1": 40,
+      "L2": 60,
+      "L3": 80
+    },
+    "speed_m_s": 10,
+    "up_speed_m_s": 2,
+    "down_speed_m_s": 2,
+    "stabilize_s": 2,
+    "battery_capacity": 100,
+    "battery_reserve": 15,
+    "capacity_kg": 5,
+    "energy_rates": {
+      "horizontal": 0.05,
+      "up": 0.12,
+      "down": 0.08,
+      "hover": 0.04,
+      "ground": 0.005
+    },
+    "load_s": 5,
+    "unload_s": 5,
+    "battery_turnaround_s": 120,
+    "reservation_buffer_s": 2,
+    "reservation_horizon_s": 180,
+    "lock_s": 5,
+    "lambda_energy": 10,
+    "lambda_risk": 30,
+    "H_T_s": 300,
+    "H_L_s": 300,
+    "H_A_s": 300,
+    "N_ref": 1000,
+    "weights": {
+      "U": 0.3,
+      "T": 0.25,
+      "S": 0.2,
+      "N": 0.15,
+      "A": 0.1
+    },
+    "late_penalty": 0.1
+  },
+  "nodes": [
+    {
+      "node_id": "W",
+      "x_m": 0,
+      "y_m": 0,
+      "kind": "warehouse",
+      "allowed_layers": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "holding_slots_per_layer": 6,
+      "vertical_allowed": true,
+      "ground_slots": 1
+    },
+    {
+      "node_id": "A",
+      "x_m": 200,
+      "y_m": 0,
+      "kind": "delivery",
+      "allowed_layers": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "holding_slots_per_layer": 6,
+      "vertical_allowed": true,
+      "ground_slots": 1
+    },
+    {
+      "node_id": "B",
+      "x_m": 400,
+      "y_m": 0,
+      "kind": "delivery",
+      "allowed_layers": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "holding_slots_per_layer": 6,
+      "vertical_allowed": true,
+      "ground_slots": 1
+    },
+    {
+      "node_id": "C",
+      "x_m": 0,
+      "y_m": 200,
+      "kind": "delivery",
+      "allowed_layers": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "holding_slots_per_layer": 6,
+      "vertical_allowed": true,
+      "ground_slots": 1
+    },
+    {
+      "node_id": "X",
+      "x_m": 200,
+      "y_m": 200,
+      "kind": "delivery",
+      "allowed_layers": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "holding_slots_per_layer": 6,
+      "vertical_allowed": true,
+      "ground_slots": 1
+    },
+    {
+      "node_id": "D",
+      "x_m": 400,
+      "y_m": 200,
+      "kind": "delivery",
+      "allowed_layers": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "holding_slots_per_layer": 6,
+      "vertical_allowed": true,
+      "ground_slots": 1
+    },
+    {
+      "node_id": "E",
+      "x_m": 0,
+      "y_m": 400,
+      "kind": "delivery",
+      "allowed_layers": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "holding_slots_per_layer": 6,
+      "vertical_allowed": true,
+      "ground_slots": 1
+    },
+    {
+      "node_id": "F",
+      "x_m": 400,
+      "y_m": 400,
+      "kind": "delivery",
+      "allowed_layers": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "holding_slots_per_layer": 6,
+      "vertical_allowed": true,
+      "ground_slots": 1
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "W-A",
+      "u": "W",
+      "v": "A",
+      "length_m": 200.0,
+      "allowed_layers": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "congestion": 0,
+      "risk": 0,
+      "closed": false,
+      "bidirectional": true
+    },
+    {
+      "edge_id": "A-B",
+      "u": "A",
+      "v": "B",
+      "length_m": 200.0,
+      "allowed_layers": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "congestion": 0,
+      "risk": 0,
+      "closed": false,
+      "bidirectional": true
+    },
+    {
+      "edge_id": "W-C",
+      "u": "W",
+      "v": "C",
+      "length_m": 200.0,
+      "allowed_layers": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "congestion": 0,
+      "risk": 0,
+      "closed": false,
+      "bidirectional": true
+    },
+    {
+      "edge_id": "C-X",
+      "u": "C",
+      "v": "X",
+      "length_m": 200.0,
+      "allowed_layers": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "congestion": 0,
+      "risk": 0,
+      "closed": false,
+      "bidirectional": true
+    },
+    {
+      "edge_id": "X-D",
+      "u": "X",
+      "v": "D",
+      "length_m": 200.0,
+      "allowed_layers": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "congestion": 0,
+      "risk": 0,
+      "closed": false,
+      "bidirectional": true
+    },
+    {
+      "edge_id": "B-D",
+      "u": "B",
+      "v": "D",
+      "length_m": 200.0,
+      "allowed_layers": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "congestion": 0,
+      "risk": 0,
+      "closed": true,
+      "bidirectional": true
+    },
+    {
+      "edge_id": "C-E",
+      "u": "C",
+      "v": "E",
+      "length_m": 200.0,
+      "allowed_layers": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "congestion": 0,
+      "risk": 0,
+      "closed": true,
+      "bidirectional": true
+    },
+    {
+      "edge_id": "E-F",
+      "u": "E",
+      "v": "F",
+      "length_m": 400.0,
+      "allowed_layers": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "congestion": 0,
+      "risk": 0,
+      "closed": false,
+      "bidirectional": true
+    },
+    {
+      "edge_id": "D-F",
+      "u": "D",
+      "v": "F",
+      "length_m": 200.0,
+      "allowed_layers": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "congestion": 0,
+      "risk": 0,
+      "closed": false,
+      "bidirectional": true
+    },
+    {
+      "edge_id": "A-X",
+      "u": "A",
+      "v": "X",
+      "length_m": 200.0,
+      "allowed_layers": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "congestion": 0,
+      "risk": 0,
+      "closed": false,
+      "bidirectional": true
+    },
+    {
+      "edge_id": "X-F",
+      "u": "X",
+      "v": "F",
+      "length_m": 282.842712474619,
+      "allowed_layers": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "congestion": 0,
+      "risk": 0,
+      "closed": false,
+      "bidirectional": true
+    },
+    {
+      "edge_id": "E-X",
+      "u": "E",
+      "v": "X",
+      "length_m": 282.842712474619,
+      "allowed_layers": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "congestion": 0,
+      "risk": 0,
+      "closed": false,
+      "bidirectional": true
+    }
+  ],
+  "stock_kg": {
+    "medical": 1000,
+    "water": 1000,
+    "food": 1000,
+    "shelter": 1000
+  },
+  "stock_semantics": "Initial warehouse stock before bootstrap deliveries; reservations are a subset, not additional stock.",
+  "generation": {
+    "count": 18,
+    "release_step_s": 30,
+    "destinations": [
+      "D",
+      "F"
+    ],
+    "quantity_kg": [
+      2,
+      5
+    ],
+    "deadline_slack_s": [
+      240,
+      600
+    ],
+    "tight_deadlines": false,
+    "release_batches_s": [
+      0,
+      10,
+      20
+    ]
+  },
+  "drones": [
+    {
+      "drone_id": "D01",
+      "node": "W",
+      "layer": "G",
+      "status": "IDLE",
+      "battery": 100,
+      "capacity_kg": 5
+    },
+    {
+      "drone_id": "D02",
+      "node": "W",
+      "layer": "G",
+      "status": "IDLE",
+      "battery": 100,
+      "capacity_kg": 5
+    },
+    {
+      "drone_id": "D03",
+      "node": "W",
+      "layer": "G",
+      "status": "IDLE",
+      "battery": 100,
+      "capacity_kg": 5
+    },
+    {
+      "drone_id": "D04",
+      "node": "W",
+      "layer": "G",
+      "status": "IDLE",
+      "battery": 100,
+      "capacity_kg": 5
+    },
+    {
+      "drone_id": "D05",
+      "node": "W",
+      "layer": "G",
+      "status": "IDLE",
+      "battery": 100,
+      "capacity_kg": 5
+    },
+    {
+      "drone_id": "D06",
+      "node": "W",
+      "layer": "G",
+      "status": "IDLE",
+      "battery": 100,
+      "capacity_kg": 5
+    }
+  ],
+  "bootstrap_deliveries": [],
+  "tasks": [
+    {
+      "task_id": "T001",
+      "site_id": "D",
+      "cargo_type": "medical",
+      "release_s": 0,
+      "deadline_s": 366,
+      "expiry_s": 666,
+      "level": 2,
+      "severity": 4.5,
+      "quantity_kg": 4,
+      "people": 145,
+      "demand_id": "T001"
+    },
+    {
+      "task_id": "T002",
+      "site_id": "D",
+      "cargo_type": "water",
+      "release_s": 0,
+      "deadline_s": 425,
+      "expiry_s": null,
+      "level": 0,
+      "severity": 4,
+      "quantity_kg": 2,
+      "people": 366,
+      "demand_id": "T002"
+    },
+    {
+      "task_id": "T003",
+      "site_id": "D",
+      "cargo_type": "food",
+      "release_s": 0,
+      "deadline_s": 656,
+      "expiry_s": null,
+      "level": 0,
+      "severity": 3,
+      "quantity_kg": 5,
+      "people": 36,
+      "demand_id": "T003"
+    },
+    {
+      "task_id": "T004",
+      "site_id": "D",
+      "cargo_type": "shelter",
+      "release_s": 0,
+      "deadline_s": 401,
+      "expiry_s": null,
+      "level": 1,
+      "severity": 2,
+      "quantity_kg": 3,
+      "people": 139,
+      "demand_id": "T004"
+    },
+    {
+      "task_id": "T005",
+      "site_id": "D",
+      "cargo_type": "medical",
+      "release_s": 0,
+      "deadline_s": 641,
+      "expiry_s": 941,
+      "level": 0,
+      "severity": 4.5,
+      "quantity_kg": 3,
+      "people": 386,
+      "demand_id": "T005"
+    },
+    {
+      "task_id": "T006",
+      "site_id": "F",
+      "cargo_type": "water",
+      "release_s": 0,
+      "deadline_s": 475,
+      "expiry_s": null,
+      "level": 0,
+      "severity": 4,
+      "quantity_kg": 5,
+      "people": 321,
+      "demand_id": "T006"
+    },
+    {
+      "task_id": "T007",
+      "site_id": "F",
+      "cargo_type": "food",
+      "release_s": 10,
+      "deadline_s": 376,
+      "expiry_s": null,
+      "level": 1,
+      "severity": 3,
+      "quantity_kg": 3,
+      "people": 377,
+      "demand_id": "T007"
+    },
+    {
+      "task_id": "T008",
+      "site_id": "F",
+      "cargo_type": "shelter",
+      "release_s": 10,
+      "deadline_s": 547,
+      "expiry_s": null,
+      "level": 0,
+      "severity": 2,
+      "quantity_kg": 4,
+      "people": 99,
+      "demand_id": "T008"
+    },
+    {
+      "task_id": "T009",
+      "site_id": "D",
+      "cargo_type": "medical",
+      "release_s": 10,
+      "deadline_s": 536,
+      "expiry_s": 836,
+      "level": 2,
+      "severity": 4.5,
+      "quantity_kg": 2,
+      "people": 67,
+      "demand_id": "T009"
+    },
+    {
+      "task_id": "T010",
+      "site_id": "F",
+      "cargo_type": "water",
+      "release_s": 10,
+      "deadline_s": 422,
+      "expiry_s": null,
+      "level": 1,
+      "severity": 4,
+      "quantity_kg": 4,
+      "people": 453,
+      "demand_id": "T010"
+    },
+    {
+      "task_id": "T011",
+      "site_id": "F",
+      "cargo_type": "food",
+      "release_s": 10,
+      "deadline_s": 682,
+      "expiry_s": null,
+      "level": 0,
+      "severity": 3,
+      "quantity_kg": 4,
+      "people": 433,
+      "demand_id": "T011"
+    },
+    {
+      "task_id": "T012",
+      "site_id": "D",
+      "cargo_type": "shelter",
+      "release_s": 10,
+      "deadline_s": 599,
+      "expiry_s": null,
+      "level": 0,
+      "severity": 2,
+      "quantity_kg": 2,
+      "people": 492,
+      "demand_id": "T012"
+    },
+    {
+      "task_id": "T013",
+      "site_id": "F",
+      "cargo_type": "medical",
+      "release_s": 20,
+      "deadline_s": 423,
+      "expiry_s": 723,
+      "level": 1,
+      "severity": 4.5,
+      "quantity_kg": 4,
+      "people": 444,
+      "demand_id": "T013"
+    },
+    {
+      "task_id": "T014",
+      "site_id": "F",
+      "cargo_type": "water",
+      "release_s": 20,
+      "deadline_s": 678,
+      "expiry_s": null,
+      "level": 0,
+      "severity": 4,
+      "quantity_kg": 3,
+      "people": 380,
+      "demand_id": "T014"
+    },
+    {
+      "task_id": "T015",
+      "site_id": "D",
+      "cargo_type": "food",
+      "release_s": 20,
+      "deadline_s": 397,
+      "expiry_s": null,
+      "level": 0,
+      "severity": 3,
+      "quantity_kg": 3,
+      "people": 415,
+      "demand_id": "T015"
+    },
+    {
+      "task_id": "T016",
+      "site_id": "F",
+      "cargo_type": "shelter",
+      "release_s": 20,
+      "deadline_s": 423,
+      "expiry_s": null,
+      "level": 1,
+      "severity": 2,
+      "quantity_kg": 3,
+      "people": 463,
+      "demand_id": "T016"
+    },
+    {
+      "task_id": "T017",
+      "site_id": "D",
+      "cargo_type": "medical",
+      "release_s": 20,
+      "deadline_s": 568,
+      "expiry_s": 868,
+      "level": 2,
+      "severity": 4.5,
+      "quantity_kg": 4,
+      "people": 252,
+      "demand_id": "T017"
+    },
+    {
+      "task_id": "T018",
+      "site_id": "F",
+      "cargo_type": "water",
+      "release_s": 20,
+      "deadline_s": 466,
+      "expiry_s": null,
+      "level": 0,
+      "severity": 4,
+      "quantity_kg": 4,
+      "people": 201,
+      "demand_id": "T018"
+    }
+  ],
+  "events": [
+    {
+      "event_id": "EV0080_SET_ALLOWED_LAYERS_A-X",
+      "time_s": 80,
+      "event_type": "SET_ALLOWED_LAYERS",
+      "target_id": "A-X",
+      "payload": {
+        "layers": [
+          "L1"
+        ],
+        "mode": "drain"
+      }
+    },
+    {
+      "event_id": "EV0080_SET_ALLOWED_LAYERS_C-X",
+      "time_s": 80,
+      "event_type": "SET_ALLOWED_LAYERS",
+      "target_id": "C-X",
+      "payload": {
+        "layers": [
+          "L1"
+        ],
+        "mode": "drain"
+      }
+    },
+    {
+      "event_id": "EV0080_SET_ALLOWED_LAYERS_E-X",
+      "time_s": 80,
+      "event_type": "SET_ALLOWED_LAYERS",
+      "target_id": "E-X",
+      "payload": {
+        "layers": [
+          "L1"
+        ],
+        "mode": "drain"
+      }
+    },
+    {
+      "event_id": "EV0080_SET_ALLOWED_LAYERS_X-D",
+      "time_s": 80,
+      "event_type": "SET_ALLOWED_LAYERS",
+      "target_id": "X-D",
+      "payload": {
+        "layers": [
+          "L1"
+        ],
+        "mode": "drain"
+      }
+    },
+    {
+      "event_id": "EV0080_SET_ALLOWED_LAYERS_X-F",
+      "time_s": 80,
+      "event_type": "SET_ALLOWED_LAYERS",
+      "target_id": "X-F",
+      "payload": {
+        "layers": [
+          "L1"
+        ],
+        "mode": "drain"
+      }
+    },
+    {
+      "event_id": "EV0200_SET_ALLOWED_LAYERS_A-X",
+      "time_s": 200,
+      "event_type": "SET_ALLOWED_LAYERS",
+      "target_id": "A-X",
+      "payload": {
+        "layers": [
+          "L1",
+          "L2",
+          "L3"
+        ]
+      }
+    },
+    {
+      "event_id": "EV0200_SET_ALLOWED_LAYERS_C-X",
+      "time_s": 200,
+      "event_type": "SET_ALLOWED_LAYERS",
+      "target_id": "C-X",
+      "payload": {
+        "layers": [
+          "L1",
+          "L2",
+          "L3"
+        ]
+      }
+    },
+    {
+      "event_id": "EV0200_SET_ALLOWED_LAYERS_E-X",
+      "time_s": 200,
+      "event_type": "SET_ALLOWED_LAYERS",
+      "target_id": "E-X",
+      "payload": {
+        "layers": [
+          "L1",
+          "L2",
+          "L3"
+        ]
+      }
+    },
+    {
+      "event_id": "EV0200_SET_ALLOWED_LAYERS_X-D",
+      "time_s": 200,
+      "event_type": "SET_ALLOWED_LAYERS",
+      "target_id": "X-D",
+      "payload": {
+        "layers": [
+          "L1",
+          "L2",
+          "L3"
+        ]
+      }
+    },
+    {
+      "event_id": "EV0200_SET_ALLOWED_LAYERS_X-F",
+      "time_s": 200,
+      "event_type": "SET_ALLOWED_LAYERS",
+      "target_id": "X-F",
+      "payload": {
+        "layers": [
+          "L1",
+          "L2",
+          "L3"
+        ]
+      }
+    }
+  ],
+  "recommended_strategy": "G4",
+  "strategy_choices": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5"
+  ],
+  "editable_fields": [
+    "seed",
+    "generation.count",
+    "drone_count",
+    "end_s"
+  ],
+  "scenario_kind": "end_to_end",
+  "scenario_id": "S06",
+  "name": "上层临时禁用",
+  "description": "6架无人机，18项集中任务；第80秒禁用X相关航段L2/L3，第200秒恢复。",
+  "observe": "观察高度不可用时退回等待或绕行，不强行穿越。",
+  "materialized": true,
+  "task_count_total": 18
+}

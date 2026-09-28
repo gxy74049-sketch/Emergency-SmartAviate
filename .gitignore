@@ -1,0 +1,13 @@
+.venv/
+.venv.old/
+__pycache__/
+*.py[cod]
+.idea/
+.docqa/
+.test-temp/
+*.log
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+/Emergency*/
