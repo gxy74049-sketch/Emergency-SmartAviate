@@ -38,7 +38,7 @@ S08通过bootstrap_deliveries在t=0注入既有交付：仓库水库存由1000�
 
 新增load_preset(scenario_id)返回预设配置；materialize(config, seed)展开固定任务和背景任务，返回完整Scenario字典；validate(scenario)检查字段；engine.load(scenario)由1号在新run中执行。任务到release_s时发布，固定急救已经在tasks中，不再通过NEW_TASK事件重复插入。事件类型需要显式注册到引擎处理器。
 
-配置包提供S01～S09 JSON、catalog.json下拉目录、scenario_loader.py纯Python加载器、resolved示例和使用说明，可直接作为后续实现输入。加载器完成数据展开和校验，不是完整无人机仿真程序；动画、预约、事件执行仍按四人模块计划接入。
+配置包提供S01～S09 JSON、catalog.json下拉目录、scenario_loader.py纯Python加载器、resolved生成工具和使用说明，可直接作为后续实现输入。加载器完成数据展开和校验，不是完整无人机仿真程序；动画、预约、事件执行仍按四人模块计划接入。
 
 1号负责配置读取、幂等初态加载和事件处理；2号确认任务生成与等级、ETA语义；3号检查地图与层限制；4号负责下拉框、配置预览、待加载状态和导出。第2天加入目录与配置契约，第4天用S01贯通，第7天用S03验证高度，第8～9天接入其余事件，第10天回归所有预设，第12天只用冻结输入做正式对照。
 

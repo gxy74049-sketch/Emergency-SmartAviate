@@ -11,3 +11,4 @@ __pycache__/
 !.env.example
 .streamlit/secrets.toml
 /Emergency*/
+/应急智航_预设场景包/resolved/

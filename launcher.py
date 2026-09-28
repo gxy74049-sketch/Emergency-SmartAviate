@@ -10,7 +10,6 @@ launcher.py — 应急智航 启动器
 菜单：
     1  安装依赖 (pip install -r requirements.txt)
     2  启动主应用 (streamlit run app.py)
-    3  启动 UI 验证 (mock_app.py，兼容入口)
     4  运行单元测试 (python -m unittest discover -s tests -v)
     5  运行全部测试 + 启动主应用（推荐新机器一键）
     0  退出
@@ -61,7 +60,6 @@ _configure_stdio_encoding()
 ROOT: Path = Path(__file__).resolve().parent
 REQUIREMENTS: Path = ROOT / "requirements.txt"
 APP_ENTRY: str = "app.py"
-MOCK_ENTRY: str = "mock_app.py"
 TESTS_DIR: str = "tests"
 PYTHON: str = sys.executable or "python"
 
@@ -143,24 +141,6 @@ def action_run_app() -> None:
     _pause()
 
 
-def action_run_mock() -> None:
-    """3: 启动 UI 验证 mock_app.py。"""
-    target = ROOT / MOCK_ENTRY
-    if not target.is_file():
-        print(f"[错误] 未找到 {MOCK_ENTRY}")
-        _pause()
-        return
-    print(f"\n>>> 启动 UI 验证: streamlit run {MOCK_ENTRY}")
-    print(">>> (无引擎接入，仅验证 sidebar + Command 产出)")
-    print(">>> 浏览器请手动访问 http://localhost:8501")
-    # 关掉 stdin + 跳过 onboarding wizard
-    _run(
-        [PYTHON, "-m", "streamlit", "run", MOCK_ENTRY, *STREAMLIT_EXTRA_ARGS],
-        stdin=subprocess.DEVNULL,
-    )
-    _pause()
-
-
 def action_run_tests() -> None:
     """4: 运行单元测试。"""
     tests_path = ROOT / TESTS_DIR
@@ -192,7 +172,6 @@ def action_exit() -> None:
 MENU: List[Tuple[str, str, Callable[[], None]]] = [
     ("1", "安装依赖 (pip install -r requirements.txt)", action_install_deps),
     ("2", "启动主应用 (streamlit run app.py)",            action_run_app),
-    ("3", "启动 UI 验证 (mock_app.py)",             action_run_mock),
     ("4", "运行单元测试 (unittest discover -s tests)",   action_run_tests),
     ("5", "一键体检 (装依赖 + 跑测试 + 启应用)",          action_full_check),
     ("0", "退出",                                          action_exit),
