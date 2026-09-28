@@ -55,6 +55,7 @@ class Crossing:
         self.model_version = self.MODEL_VERSION
         self.continuous = bool(continuous)
         self.spawn_batch_size = max(1, min(4, int(spawn_batch_size)))
+        self.seed = seed
         self._rng = random.Random(seed)
         self.tick = 0
         self.signal_tick = 0
@@ -522,7 +523,8 @@ class Crossing:
                 for f in self.flights]
 
     def export(self):
-        return dict(strategy=self.strategy, continuous=self.continuous,
+        return dict(schema_version=1, model_version=self.MODEL_VERSION,
+                    seed=self.seed, strategy=self.strategy, continuous=self.continuous,
                     spawn_batch_size=self.spawn_batch_size, time=self.now,
                     signal_time=round(self.signal_tick*self.DT, 1), phase=self.phase,
                     owners=list(self.owners), all_red=self.all_red,

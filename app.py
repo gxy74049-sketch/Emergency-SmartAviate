@@ -171,10 +171,11 @@ def main():
     st.set_page_config(page_title="应急智航 · 双向路口", page_icon="🚁", layout="wide")
     st.title("应急智航 · 双向交叉口优先通行")
     st.caption("全程双向两车道 · 四进口依次放行 · 紧急协调与极端应急借道")
+    st.session_state.setdefault("cross_seed", 20260927)
     if ("crossing" not in st.session_state or
             getattr(st.session_state.crossing, "model_version", 0) != Crossing.MODEL_VERSION or
             not getattr(st.session_state.crossing, "continuous", False)):
-        st.session_state.crossing = Crossing(continuous=True)
+        st.session_state.crossing = Crossing(continuous=True, seed=st.session_state.cross_seed)
     st.session_state.setdefault("playing", False)
     sim = st.session_state.crossing
 
@@ -186,12 +187,15 @@ def main():
                                           value=getattr(sim, "spawn_batch_size", 1),
                                           key="spawn_batch_size")
     sim.spawn_batch_size = max(1, min(4, int(spawn_batch_size)))
-    pending = strategy != sim.strategy
+    seed = int(st.sidebar.number_input("随机种子", min_value=0, max_value=2147483647,
+                                       step=1, key="cross_seed",
+                                       help="相同种子、策略和操作可重复演示；修改后重置生效。"))
+    pending = strategy != sim.strategy or seed != getattr(sim, "seed", None)
     if pending:
         st.session_state.playing = False
-        st.sidebar.warning("策略已修改，重置后应用。")
+        st.sidebar.warning("策略或随机种子已修改，重置后应用。")
     if st.sidebar.button("重置场景", key="cross_reset", width="stretch"):
-        st.session_state.crossing = Crossing(strategy, continuous=True,
+        st.session_state.crossing = Crossing(strategy, continuous=True, seed=seed,
                                              spawn_batch_size=spawn_batch_size)
         st.session_state.playing = False
         st.session_state.pop("adjustment", None)
@@ -298,7 +302,7 @@ def main():
             for log in sim.logs[-5:][::-1]:
                 st.markdown(f"**{log['时间']:.1f}s · {log['对象']} · {log['事件']}**")
                 st.caption(log["说明"])
-        st.subheader("实时评分与车辆状态")
+        st.subheader("实时评分与无人机状态")
         tabs = st.tabs(["评分排行", "全部状态", "决策日志"])
         with tabs[0]:
             st.dataframe(sim.ranking_rows(), hide_index=True, width="stretch")

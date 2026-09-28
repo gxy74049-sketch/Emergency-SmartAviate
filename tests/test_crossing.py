@@ -284,6 +284,30 @@ class CrossingTests(unittest.TestCase):
             self.assertAlmostEqual(averages[level], 8.0, places=1)
             self.assertTrue(all(averages[other] is None for other in (0, 1, 2) if other != level))
 
+    def test_continuous_seed_reproduces_export(self):
+        first = Crossing(continuous=True, seed=42, spawn_batch_size=3)
+        second = Crossing(continuous=True, seed=42, spawn_batch_size=3)
+        first.advance(120)
+        second.advance(120)
+        self.assertEqual(first.export(), second.export())
+        self.assertEqual(first.export()["seed"], 42)
+        self.assertEqual(first.export()["model_version"], Crossing.MODEL_VERSION)
+        self.assertNotEqual(Crossing(seed=42).rows(), Crossing(seed=43).rows())
+
+    def test_ui_seed_requires_reset_and_replays(self):
+        page = AppTest.from_file(str(Path(__file__).resolve().parents[1] / "app.py")).run(timeout=30)
+        page.number_input(key="cross_seed").set_value(42).run()
+        self.assertTrue(page.button(key="cross_start").disabled)
+        self.assertTrue(page.button(key="cross_step").disabled)
+        page.button(key="cross_reset").click().run()
+        self.assertEqual(page.session_state["crossing"].seed, 42)
+        page.button(key="cross_jump").click().run()
+        snapshot = page.session_state["crossing"].export()
+        page.button(key="cross_reset").click().run()
+        page.button(key="cross_jump").click().run()
+        self.assertEqual(page.session_state["crossing"].export(), snapshot)
+        self.assertFalse(page.exception)
+
     def test_invalid_inputs_and_snapshot(self):
         sim = Crossing()
         snapshot = sim.export()

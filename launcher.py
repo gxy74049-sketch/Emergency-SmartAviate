@@ -110,16 +110,17 @@ def _run(cmd: List[str], *, stdin: Optional[int] = None) -> int:
 
 # ===================== 菜单动作 =====================
 
-def action_install_deps() -> None:
+def action_install_deps() -> int:
     """1: 安装依赖。"""
     print(f"\n>>> 正在安装依赖 ({REQUIREMENTS.name})")
     if not REQUIREMENTS.is_file():
-        print(f"[警告] 未找到 {REQUIREMENTS}，直接安装 streamlit 默认版本")
-        rc = _run([PYTHON, "-m", "pip", "install", "streamlit"])
+        print(f"[错误] 未找到 {REQUIREMENTS}，无法安装固定版本依赖")
+        rc = 1
     else:
         rc = _run([PYTHON, "-m", "pip", "install", "-r", str(REQUIREMENTS)])
     print(f"\n>>> 退出码: {rc}", "✓ 依赖已就绪" if rc == 0 else "✗ 安装失败")
     _pause()
+    return rc
 
 
 def action_run_app() -> None:
@@ -141,23 +142,28 @@ def action_run_app() -> None:
     _pause()
 
 
-def action_run_tests() -> None:
+def action_run_tests() -> int:
     """4: 运行单元测试。"""
     tests_path = ROOT / TESTS_DIR
     if not tests_path.is_dir():
         print(f"[错误] 未找到测试目录 {TESTS_DIR}/")
         _pause()
-        return
+        return 1
     print(f"\n>>> 运行测试: python -m unittest discover -s {TESTS_DIR} -v")
     rc = _run([PYTHON, "-m", "unittest", "discover", "-s", TESTS_DIR, "-v"])
     print(f"\n>>> 退出码: {rc}", "✓ 全部通过" if rc == 0 else "✗ 存在失败用例")
     _pause()
+    return rc
 
 
 def action_full_check() -> None:
     """5: 一键体检：装依赖 → 跑测试 → 启动主应用。"""
-    action_install_deps()
-    action_run_tests()
+    if action_install_deps() != 0:
+        print("[停止] 依赖安装失败，请修复后重试。")
+        return
+    if action_run_tests() != 0:
+        print("[停止] 测试未通过，请查看错误后重试。")
+        return
     action_run_app()
 
 
@@ -169,7 +175,7 @@ def action_exit() -> None:
 
 # ===================== 菜单定义 =====================
 
-MENU: List[Tuple[str, str, Callable[[], None]]] = [
+MENU: List[Tuple[str, str, Callable[[], object]]] = [
     ("1", "安装依赖 (pip install -r requirements.txt)", action_install_deps),
     ("2", "启动主应用 (streamlit run app.py)",            action_run_app),
     ("4", "运行单元测试 (unittest discover -s tests)",   action_run_tests),
@@ -182,7 +188,7 @@ MENU: List[Tuple[str, str, Callable[[], None]]] = [
 
 def _print_menu() -> None:
     print("=" * 64)
-    print("  应急智航 — 无人机物资调度仿真系统  启动器")
+    print("  应急智航 — 双向交叉口优先通行  启动器")
     print(f"  Python : {sys.version.split()[0]}")
     print(f"  平台   : {platform.system()} {platform.release()}")
     print(f"  工作目录: {ROOT}")
